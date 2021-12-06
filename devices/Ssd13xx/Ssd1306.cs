@@ -3,6 +3,8 @@
 
 using System;
 using System.Device.I2c;
+using Iot.Device.DisplayDeviceShared;
+using Iot.Device.DisplayDeviceShared.Commands;
 using Iot.Device.Ssd13xx.Commands;
 
 namespace Iot.Device.Ssd13xx
@@ -49,29 +51,27 @@ namespace Iot.Device.Ssd13xx
         /// Sends command to the device
         /// </summary>
         /// <param name="command">Command being send</param>
-        public override void SendCommand(ISharedCommand command) => SendCommand(command);
+        public override void SendCommand(ISharedCommand command) => SendCommand((ICommand)command);
 
-        /// <summary>
-        /// Send a command to the display controller.
-        /// </summary>
-        /// <param name="command">The command to send to the display controller.</param>
-        private void SendCommand(ICommand command)
+        /// <inheritdoc/>
+        public override void SendCommand(ICommand command)
         {
-            SpanByte commandBytes = command?.GetBytes();
+            var commandBytes = command.GetBytes();
 
             if (commandBytes is not { Length: > 0 })
             {
                 throw new ArgumentNullException(nameof(command), "Argument is either null or there were no bytes to send.");
             }
+            byte[] buffer = new byte[commandBytes.Length + 1];
+            Array.Copy(commandBytes, 0, buffer, 1, commandBytes.Length);
 
-            SpanByte writeBuffer = SliceGenericBuffer(commandBytes.Length + 1);
-            writeBuffer[0] = 0x00; // Control byte
-            commandBytes.CopyTo(writeBuffer.Slice(1));
+            // Control byte
+            buffer[0] = 0x00;
 
             // Be aware there is a Continuation Bit in the Control byte and can be used
             // to state (logic LOW) if there is only data bytes to follow.
             // This binding separates commands and data by using SendCommand and SendData.
-            _i2cDevice.Write(writeBuffer);
+            _i2cDevice.Write(buffer);
         }
     }
 }

@@ -21,20 +21,28 @@
   <Import Project="$(NanoFrameworkProjectSystemPath)NFProjectSystem.props" Condition="Exists('$(NanoFrameworkProjectSystemPath)NFProjectSystem.props')" />
   <ItemGroup>
     <Reference Include="mscorlib">
-      <HintPath>packages\nanoFramework.CoreLibrary.1.10.5\lib\mscorlib.dll</HintPath>
+      <HintPath>packages\nanoFramework.CoreLibrary.1.11.7\lib\mscorlib.dll</HintPath>
     </Reference>
-    <Reference Include="System.Device.I2c, Version=1.0.1.2, Culture=neutral, PublicKeyToken=c07d481e9758c731">
-      <HintPath>packages\nanoFramework.System.Device.I2c.1.0.1\lib\System.Device.I2c.dll</HintPath>
-      <Private>True</Private>
-      <SpecificVersion>True</SpecificVersion>
+    <Reference Include="System.Device.I2c">
+      <HintPath>packages\nanoFramework.System.Device.I2c.1.0.2\lib\System.Device.I2c.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Math">
+      <HintPath>packages\nanoFramework.System.Math.1.4.3\lib\System.Math.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Compile Include="Commands\*.cs" />
+    <Compile Include="Commands\ActivateScroll.cs" />
+    <Compile Include="Commands\DeactivateScroll.cs" />
+    <Compile Include="Commands\ISsd1306Command.cs" />
+    <Compile Include="Commands\ISsd1327Command.cs" />
+    <Compile Include="Commands\SetContrastControlForBank0.cs" />
+    <Compile Include="Commands\SetDisplayOff.cs" />
+    <Compile Include="Commands\SetDisplayOn.cs" />
+    <Compile Include="Commands\SetInverseDisplay.cs" />
+    <Compile Include="Commands\SetMultiplexRatio.cs" />
     <Compile Include="Commands\Ssd1327Commands\*.cs" />
     <Compile Include="Commands\Ssd1306Commands\*.cs" />
-    <Compile Include="IFont.cs" />
     <Compile Include="ListByte.cs" />
     <Compile Include="Ssd1306.cs" />
     <Compile Include="Ssd1327.cs" />
@@ -49,6 +57,7 @@
     <Compile Include="Ssd13xx.cs" />
     <None Include="*.md" />
   </ItemGroup>
+  <Import Project="..\DisplayDevice\DisplayDevice.projitems" Label="Shared" />
   <Import Project="$(NanoFrameworkProjectSystemPath)NFProjectSystem.CSharp.targets" Condition="Exists('$(NanoFrameworkProjectSystemPath)NFProjectSystem.CSharp.targets')" />
   <!-- INSERT IMPORTS HERE -->
   <ProjectExtensions>

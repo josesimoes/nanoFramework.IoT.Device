@@ -3,6 +3,7 @@
 
 using System;
 using System.Device.I2c;
+using Iot.Device.DisplayDeviceShared.Commands;
 using Iot.Device.Ssd13xx.Commands;
 using Ssd1327Cmnds = Iot.Device.Ssd13xx.Commands.Ssd1327Commands;
 
@@ -74,7 +75,7 @@ namespace Iot.Device.Ssd13xx
         /// Sends command to the device
         /// </summary>
         /// <param name="command">Command being send</param>
-        public override void SendCommand(ISharedCommand command) => SendCommand(command);
+        public override void SendCommand(ISharedCommand command) => SendCommand((ICommand)command);
 
         /// <summary>
         /// Send data to the display controller.
@@ -87,9 +88,10 @@ namespace Iot.Device.Ssd13xx
             _i2cDevice.Write(writeBuffer);
         }
 
-        private void SendCommand(ICommand command)
+        /// <inheritdoc/>
+        public override void SendCommand(ICommand command)
         {
-            byte[]? commandBytes = command?.GetBytes();
+            byte[] commandBytes = command.GetBytes();
 
             if (commandBytes is not { Length: >0 })
             {
